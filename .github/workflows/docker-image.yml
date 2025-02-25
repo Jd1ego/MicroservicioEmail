@@ -19,6 +19,9 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Grant execute permission to Gradlew
+        run: chmod +x gradlew
+
       - name: Build JAR with Gradle
         run: ./gradlew build
 
@@ -26,8 +29,7 @@ jobs:
         run: echo "LayLa102232" | docker login -u "juancamco" --password-stdin
 
       - name: Build Docker image
-        run: |
-          docker build -t juancamco/microservicio-email:latest .
+        run: docker build -t juancamco/microservicio-email:latest .
 
       - name: Push Docker image to Docker Hub
         run: docker push juancamco/microservicio-email:latest
