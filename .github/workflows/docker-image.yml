@@ -10,26 +10,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout código
         uses: actions/checkout@v3
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: '17'
+      - name: Mostrar permisos antes de cambio
+        run: ls -la
 
-      - name: Grant execute permission to Gradlew
+      - name: Dar permisos de ejecución a Gradlew
         run: chmod +x gradlew
 
-      - name: Build JAR with Gradle
+      - name: Convertir Gradlew a formato UNIX (evita errores en Linux)
+        run: sudo apt-get install dos2unix && dos2unix gradlew
+
+      - name: Mostrar permisos después de cambio
+        run: ls -la
+
+      - name: Build JAR con Gradle
         run: ./gradlew build
 
-      - name: Log in to Docker Hub
+      - name: Iniciar sesión en Docker Hub
         run: echo "LayLa102232" | docker login -u "juancamco" --password-stdin
 
-      - name: Build Docker image
-        run: docker build -t juancamco/microservicio-email:latest .
+      - name: Construir imagen Docker
+        run: docker build -t juancamco/microservicioemail:latest .
 
-      - name: Push Docker image to Docker Hub
-        run: docker push juancamco/microservicio-email:latest
+      - name: Subir imagen a Docker Hub
+        run: docker push juancamco/microservicioemail:latest
