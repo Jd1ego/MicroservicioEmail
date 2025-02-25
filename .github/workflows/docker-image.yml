@@ -1,0 +1,33 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Build JAR with Gradle
+        run: ./gradlew build
+
+      - name: Log in to Docker Hub
+        run: echo "LayLa102232" | docker login -u "juancamco" --password-stdin
+
+      - name: Build Docker image
+        run: |
+          docker build -t juancamco/microservicio-email:latest .
+
+      - name: Push Docker image to Docker Hub
+        run: docker push juancamco/microservicio-email:latest
